@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- 
+    TECHNICIAN INTERFACE - FIELD STAFF DASHBOARD
+    Simplified interface for field technicians to view assignments
+    and update their current status and location
+  -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Status Card</title>
+  <!-- Technician-specific interface styling -->
+  <link rel="stylesheet" href="tech.css" />
+</head>
+<body>
+  <!-- Simplified navigation bar for technician users -->
+  <nav class="navbar">
+    <div class="nav-content">
+      <!-- Minimal navigation for technician interface -->
+      <div class="nav-items">
+        <!-- Future expansion area for technician-specific navigation -->
+      </div>
+      <!-- Logout functionality returns to login page -->
+      <a href="index.html" class="logout-btn">Logout</a>
+    </div>
+  </nav>
+
+  <!-- Main technician dashboard content -->
+  <main>
+    <!-- Status card containing all technician information and controls -->
+    <div class="card">
+      <!-- Left panel - technician profile and status management -->
+      <div class="left-panel">
+        <!-- Technician profile picture -->
+        <img src="Pictures/avatar.png" alt="User Avatar" class="avatar" />
+        
+        <!-- Technician identification -->
+        <h2>Rajesh Maharaj</h2>
+        
+        <!-- Status update dropdown for real-time status changes -->
+        <div class="status-dropdown">
+          <select id="status-dropdown">
+            <option value="Available">Available</option>
+            <option value="On-route">On-route</option>
+            <option value="On site">On site</option>
+          </select>
+        </div>
+        
+        <!-- Current assignment display - updated by managers -->
+        <div class="assigned-location">
+          Assigned Location: <span id="location">"Placeholder Data"</span>
+        </div>
+      </div>
+
+      <!-- Right panel - regional map reference -->
+      <div class="right-panel map-only">
+        <!-- Static map showing technician's assigned region -->
+        <img src="Pictures/WEST.png" alt="Map Placeholder" class="map-image"/>
+      </div>
+    </div>
+  </main>
+
+  <!-- Technician interface functionality controller -->
+  <script src="tech.js"></script>
+</body>
+</html>

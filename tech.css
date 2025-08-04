@@ -1,0 +1,438 @@
+Skip to content
+Files
+Commands
+Search
+230m
+ • 
+4 hours ago
+Port :80 opened on
+/config
+Open a new tab to test authentication and file uploads.
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Central Region Map - Manager</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="central.css" />
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-content">
+      <ul>
+        <li><a href="manager_homepage.html">Home</a></li>
+        <li>
+          <a href="#">Locations</a>
+          <div class="dropdown">
+            <a href="west.html">West</a>
+            <a href="east.html">East</a>
+            <a href="central.html">Central</a>
+            <a href="south.html">South</a>
+          </div>
+        </li>
+        <li><a href="#">User Configuration</a></li>
+      </ul>
+      <a href="index.html" class="logout-btn">Logout</a>
+    </div>
+  </nav>
+
+  <div id="map"></div>
+
+  <div id="tech-status-bar"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="central.js"></script>
+</body>
+</html>
+
+
+var map = L.map('map', {
+  zoomControl: true,
+  scrollWheelZoom: true,
+  doubleClickZoom: true,
+  dragging: true,
+  minZoom: 10.8,
+  maxZoom: 14,
+  zoomSnap: 0.1,
+  zoomDelta: 0.1,
+  maxBounds: [
+    [10.30, -61.70],  // SW corner (south of Couva, west coast)
+    [10.60, -60.75]   // NE corner (north of Chaguanas, east-central edge)
+  ],
+  maxBoundsViscosity: 1.0
+}).setView([10.45, -61.22], 11.0);  // Center of Trinidad
+
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+const blueIcon = L.icon({
+  iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png',
+  iconSize: [37, 37],
+  iconAnchor: [18, 37]
+});
+
+const redIcon = L.icon({
+  iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png',
+  iconSize: [37, 37],
+  iconAnchor: [18, 37]
+});
+
+let clickTimeout = null;
+
+map.on('click', function(e) {
+  if (clickTimeout !== null) {
+    clearTimeout(clickTimeout);
+    clickTimeout = null;
+    addMarker(e.latlng, 'red');
+  } else {
+    clickTimeout = setTimeout(() => {
+      addMarker(e.latlng, 'blue');
+      clickTimeout = null;
+    }, 300);
+  }
+});
+
+function addMarker(latlng, color) {
+  let marker = L.marker(latlng, {
+    draggable: true,
+    icon: color === 'red' ? redIcon : blueIcon
+  }).addTo(map);
+
+  marker.on('contextmenu', () => map.removeLayer(marker));
+}
+
+function loadTechnicians() {
+  const data = localStorage.getItem('central_technicians');
+  if (data) {
+    return JSON.parse(data);
+  }
+  const defaultTechs = [
+    { id: 6, name: 'Ravi Singh', status: 'Available', location: 'Chaguanas', iconColor: 'blue' },
+    { id: 7, name: 'Alicia Boodram', status: 'Dispatched', location: 'Couva', iconColor: 'red' }
+  ];
+  localStorage.setItem('central_technicians', JSON.stringify(defaultTechs));
+  return defaultTechs;
+}
+
+let technicians = loadTechnicians();
+
+function saveTechnicians() {
+  localStorage.setItem('central_technicians', JSON.stringify(technicians));
+}
+
+function renderTechnicianBar() {
+  const container = document.getElementById('tech-status-bar');
+  container.innerHTML = '';
+
+  technicians.forEach(tech => {
+    const card = document.createElement('div');
+    card.className = 'tech-card';
+
+    const icon = document.createElement('img');
+    icon.className = 'tech-icon';
+    icon.src = tech.iconColor === 'red'
+      ? 'https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png'
+      : 'https://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png';
+    icon.alt = `${tech.name} icon`;
+    card.appendChild(icon);
+
+    const nameLabel = document.createElement('div');
+    nameLabel.textContent = tech.name;
+    nameLabel.style.fontWeight = 'bold';
+    card.appendChild(nameLabel);
+
+    const statusLabel = document.createElement('div');
+    statusLabel.textContent = `Status: ${tech.status}`;
+    card.appendChild(statusLabel);
+
+    const locationInput = document.createElement('input');
+    locationInput.type = 'text';
+    locationInput.value = tech.location;
+    locationInput.className = 'tech-location-input';
+    locationInput.title = "Edit technician's assigned location";
+
+    locationInput.addEventListener('change', (e) => {
+      tech.location = e.target.value;
+      saveTechnicians();
+    });
+
+    card.appendChild(locationInput);
+    container.appendChild(card);
+  });
+}
+
+renderTechnicianBar();
+
+/* Reset & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+  background-color: 
+#f8f8f8;
+}
+
+/* Navbar */
+.navbar {
+  background-color: 
+#005bbb;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  z-index: 1000;
+  position: relative;
+  box-shadow: 0 2px 8px 
+rgba(0, 0, 0, 0.15);
+}
+
+.nav-content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-items {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+/* Logout Button */
+.logout-btn {
+  display: inline-block;
+  text-decoration: none;
+  color: 
+#fff;
+  background: transparent;
+  border: none;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.25s;
+}
+
+.logout-btn:hover {
+  background-color: 
+rgba(255, 255, 255, 0.2);
+}
+
+/* Main Layout */
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 60px);
+  padding: 20px;
+}
+
+/* Card */
+.card {
+  display: flex;
+  width: 95vw;
+  height: 85vh;
+  background: 
+#fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px 
+rgba(0, 0, 0, 0.1);
+}
+
+/* Left Panel */
+.left-panel {
+  background: linear-gradient(to right, 
+#005bbb, 
+#0073e6);
+  color: 
+white;
+  width: 35%;
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 30px;
+  position: relative;
+}
+
+.avatar {
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  border: 4px solid 
+#fff;
+  object-fit: cover;
+  box-shadow: 0 4px 12px 
+rgba(0, 0, 0, 0.2);
+}
+
+.left-panel h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  user-select: none;
+}
+
+.status-dropdown select {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: 
+#e0eaff;
+  color: 
+#005bbb;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.status-dropdown select:hover, 
+.status-dropdown select:focus {
+  background-color: 
+#c0d4ff;
+  outline: none;
+}
+
+.assigned-location {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  user-select: none;
+  color: 
+#ffffff;
+  font-weight: 500;
+}
+
+/* Right Panel (Map) */
+.right-panel.map-only {
+  width: 65%;
+  background-color: 
+#f8f8f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0 12px 12px 0;
+}
+
+.map-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Region overlays */
+.region {
+  position: absolute;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: 
+black;
+  font-size: 2rem;
+  font-weight: bold;
+  text-decoration: none;
+  text-shadow: 1px 1px 2px 
+rgba(255, 255, 255, 0.8);
+  transition: background 0.2s;
+  z-index: 1;
+}
+
+.region:hover {
+  background: 
+rgba(255, 255, 255, 0.3);
+}
+
+/* Mobile responsive design - enhanced for better compatibility */
+@media screen and (max-width: 768px) {
+  /* Body adjustments for mobile */
+  body {
+    padding: 10px;                                          /* Reduced padding on mobile */
+  }
+
+  /* Status card mobile optimization */
+  .status-card {
+    padding: 1.5rem;                                        /* Reduced padding */
+    margin: 0.5rem;                                         /* Smaller margin */
+    max-width: 100%;                                        /* Full width on small screens */
+    width: calc(100% - 1rem);                              /* Account for margins */
+  }
+
+  /* Profile image mobile adjustment */
+  .profile-img {
+    width: 70px;                                            /* Smaller profile image */
+    height: 70px;
+    margin-bottom: 0.75rem;                                 /* Reduced margin */
+  }
+
+  /* Technician name mobile optimization */
+  .technician-name {
+    font-size: 1.25rem;                                     /* Smaller name text */
+    margin-bottom: 0.4rem;                                  /* Reduced margin */
+  }
+
+  /* Status section mobile adjustments */
+  .status-section {
+    margin: 1.2rem 0;                                       /* Reduced margins */
+  }
+
+  /* Status dropdown mobile optimization */
+  #status-dropdown {
+    padding: 0.6rem;                                        /* Reduced padding */
+    font-size: 0.95rem;                                     /* Slightly smaller text */
+  }
+
+  /* Location section mobile adjustments */
+  .location-section {
+    margin: 1.2rem 0;                                       /* Reduced margins */
+    padding: 0.8rem;                                        /* Reduced padding */
+  }
+
+  /* Location text mobile optimization */
+  #location {
+    font-size: 0.95rem;                                     /* Slightly smaller text */
+  }
+
+  /* Labels mobile adjustment */
+  .status-label,
+  .location-label {
+    font-size: 0.95rem;                                     /* Slightly smaller labels */
+    margin-bottom: 0.4rem;                                  /* Reduced margin */
+  }
+}
+
+/* Extra small screens (phones in portrait) */
+@media screen and (max-width: 480px) {
+  .status-card {
+    padding: 1rem;                                          /* Further reduced padding */
+    margin: 0.25rem;                                        /* Minimal margin */
+  }
+
+  .technician-name {
+    font-size: 1.1rem;                                      /* Even smaller name */
+  }
+
+  .profile-img {
+    width: 60px;                                            /* Smaller profile image */
+    height: 60px;
+  }
+}
+
+Loading... - Replit

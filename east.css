@@ -1,0 +1,258 @@
+/*
+  ==========================================
+  TRINIDAD FIELD MANAGEMENT SYSTEM
+  EAST REGION MAP STYLES
+  ==========================================
+  
+  This CSS file styles the East region map page.
+  It includes map layout, navigation bar, and technician status cards.
+  Uses Leaflet.js for interactive mapping functionality.
+*/
+
+/* Universal reset - ensures consistent styling across all browsers */
+* {
+  margin: 0;                 /* Removes default browser margins */
+  padding: 0;                /* Removes default browser padding */
+  box-sizing: border-box;    /* Makes padding and border count inside element width/height */
+}
+
+/* Full-height layout for the map page */
+html, body {
+  margin: 0;                 /* Removes any remaining margins */
+  padding: 0;                /* Removes any remaining padding */
+  height: 100%;              /* Full viewport height */
+  font-family: sans-serif;   /* Clean, professional font */
+}
+
+/* Navigation bar - appears at top of all manager pages */
+.navbar {
+  background-color: #005bbb;                    /* Professional blue background */
+  height: 60px;                                 /* Fixed height for consistency */
+  display: flex;                                /* Flexbox layout for alignment */
+  justify-content: center;                      /* Centers navigation content */
+  align-items: center;                          /* Vertically centers content */
+  z-index: 1000;                               /* Ensures navbar stays above other content */
+  position: relative;                           /* For z-index positioning */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);  /* Subtle shadow for depth */
+}
+
+.nav-content {
+  display: flex;
+  justify-content: space-between;  /* push logout right */
+  align-items: center;
+  width: 100%;  /* changed from fit-content */
+  padding: 0 2rem;
+}
+
+/* Nav Links */
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.navbar li {
+  position: relative;
+}
+
+.navbar a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: background-color 0.25s;
+  white-space: nowrap;
+}
+
+.navbar a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Logout Button */
+.logout-btn {
+  text-decoration: none;  /* remove underline */
+  color: #fff;
+  background: transparent;
+  border: none;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.25s;
+}
+
+.logout-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Dropdown */
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #005bbb;
+  border-radius: 6px;
+  overflow: hidden;
+  min-width: 160px;
+  z-index: 10;
+}
+
+.navbar li:hover .dropdown {
+  display: block;
+}
+
+.dropdown a {
+  display: block;
+  padding: 0.75rem 1rem;
+}
+
+.dropdown a:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Map */
+#map {
+  height: calc(100vh - 50px);
+  width: 100%;
+  position: relative;
+  z-index: 0;
+}
+
+/* Tech Status Bar */
+#tech-status-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #222;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  padding: 15px 30px;
+  border-radius: 30px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  max-width: 900px;
+  width: 90%;
+  box-sizing: border-box;
+  z-index: 1000;
+  overflow: visible;
+}
+
+.tech-card {
+  background-color: #f9f9f9;
+  border-radius: 15px;
+  padding: 12px 20px;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.tech-icon {
+  width: 37px;
+  height: 37px;
+}
+
+.tech-status-select {
+  width: 130px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.tech-location-input {
+  width: 130px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  text-align: center;
+}
+
+.tech-location {
+  font-size: 13px;
+  color: #666;
+  user-select: none;
+}
+
+/* Mobile responsive design - only affects screens 768px and below */
+@media screen and (max-width: 768px) {
+  /* Navigation adjustments for mobile */
+  .navbar {
+    height: 50px;
+    padding: 0 1rem;
+  }
+  
+  .nav-content {
+    padding: 0 1rem;
+  }
+  
+  .navbar ul {
+    gap: 1rem;
+  }
+  
+  .navbar a {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  /* Map takes remaining space */
+  #map {
+    height: calc(100vh - 50px);
+  }
+  
+  /* Mobile-optimized status bar */
+  #tech-status-bar {
+    bottom: 10px;
+    width: 95%;
+    padding: 10px 15px;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  /* Smaller technician cards for mobile */
+  .tech-card {
+    min-width: 140px;
+    padding: 8px 15px;
+    gap: 6px;
+  }
+  
+  .tech-icon {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .tech-status-select,
+  .tech-location-input {
+    width: 110px;
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+  
+  .tech-location {
+    font-size: 11px;
+  }
+  
+  /* Dropdown menu mobile optimization */
+  .dropdown {
+    min-width: 120px;
+    font-size: 0.85rem;
+  }
+  
+  .dropdown a {
+    padding: 0.5rem 0.8rem;
+  }
+}
