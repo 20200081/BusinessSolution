@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- 
+    CENTRAL REGION MAP PAGE
+    Interactive map interface for managing field technicians in Central Trinidad
+    Covers areas including Chaguanas, Couva, and surrounding regions
+  -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Central Region Map - Manager</title>
+
+  <!-- External map library for interactive mapping functionality -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <!-- Region-specific styling for Central Trinidad map interface -->
+  <link rel="stylesheet" href="central.css" />
+</head>
+<body>
+  <!-- Primary navigation bar for manager dashboard -->
+  <nav class="navbar">
+    <div class="nav-content">
+      <!-- Main navigation menu with region access -->
+      <ul>
+        <li><a href="manager_homepage.html">Home</a></li>
+        <li>
+          <!-- Dropdown menu for quick region switching -->
+          <a href="#">Locations</a>
+          <div class="dropdown">
+            <a href="west.html">West</a>
+            <a href="east.html">East</a>
+            <a href="central.html">Central</a>
+            <a href="south.html">South</a>
+          </div>
+        </li>
+        <li><a href="#">User Configuration</a></li>
+      </ul>
+      <!-- Logout functionality returns user to login page -->
+      <a href="index.html" class="logout-btn">Logout</a>
+    </div>
+  </nav>
+
+  <!-- Interactive map container for Central Trinidad region -->
+  <div id="map"></div>
+
+  <!-- Technician status display bar showing real-time field staff information -->
+  <div id="tech-status-bar"></div>
+
+  <!-- Required JavaScript libraries and functionality -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="central.js"></script>
+</body>
+</html>

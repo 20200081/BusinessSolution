@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- 
+    USER CONFIGURATION PAGE - ADMIN INTERFACE
+    Management interface for viewing and configuring user accounts
+    Displays technician assignments across all regions
+  -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Config - Manager View</title>
+  <!-- Configuration page specific styling -->
+  <link rel="stylesheet" href="config.css" />
+</head>
+<body>
+  <!-- Primary navigation bar for system access -->
+  <nav class="navbar">
+    <div class="nav-content">
+      <!-- Main navigation menu with active config indicator -->
+      <ul>
+        <li><a href="manager_homepage.html">Home</a></li>
+        <li>
+          <!-- Regional access dropdown -->
+          <a href="#">Locations</a>
+          <div class="dropdown">
+            <a href="west.html">West</a>
+            <a href="east.html">East</a>
+            <a href="central.html">Central</a>
+            <a href="south.html">South</a>
+          </div>
+        </li>
+        <li><a href="config.html">User Configuration</a></li>
+      </ul>
+      <!-- System logout functionality -->
+      <a href="#" class="logout-btn">Logout</a>
+    </div>
+  </nav>
+
+  <!-- Main configuration interface -->
+  <main>
+    <div class="card">
+      <!-- Left panel - administrator profile display -->
+      <div class="left-panel">
+        <img src="Pictures/avatar.png" alt="Admin Avatar" class="avatar" />
+        <h2>Administrator</h2>
+      </div>
+      
+      <!-- Right panel - user list and management interface -->
+      <div class="right-panel list-only">
+        <!-- Dynamic user list container - populated by JavaScript -->
+        <div class="user-list" id="userList">
+          <!-- User cards will be dynamically generated here -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- User configuration controller -->
+  <script src="config.js"></script>
+</body>
+</html>
